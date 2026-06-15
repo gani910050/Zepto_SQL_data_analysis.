@@ -1,78 +1,49 @@
-# 📊 Zepto Retail Analytics Dashboard
+# Zepto Sales & Inventory Dashboard
 
-An interactive Power BI dashboard built to analyze Zepto's retail data, providing insights into sales performance, inventory management, pricing strategy, and discount analysis.
+A data analysis and visualization project using **SQL** and **Power BI**, built on Zepto's product dataset.
 
-## 🚀 Project Overview
+## Project Overview
+This project explores Zepto's product inventory and sales data to uncover insights on pricing, discounts, stock availability, and category-wise performance.
 
-This project transforms raw retail data into meaningful business insights through interactive dashboards and visualizations. It helps identify revenue opportunities, inventory issues, and pricing trends for better decision-making.
+## Tools Used
+- **SQL** – Data cleaning, exploration, and analysis
+- **Power BI** – Interactive dashboard and visualizations
 
-## 🎯 Key Features
+## Dataset
+- `zepto_v3.csv` – Raw product data (category, MRP, discount, stock status, weight, etc.)
+- `sql_project.sql` – SQL scripts for data cleaning and analysis queries
 
-- Executive KPI Dashboard
-  - Total SKUs
-  - Estimated Revenue
-  - Average MRP
-  - Average Selling Price
-  - Average Discount
-  - In-Stock Products
-  - Out-of-Stock Products
+## Data Cleaning (SQL)
+- Removed rows with zero MRP / selling price
+- Converted prices from paise to rupees
+- Checked for null values and duplicate product names
 
-- Category-wise Revenue Analysis
-- Product Performance Analysis
-- Inventory & Stock Status Monitoring
-- Pricing Distribution Analysis
-- Discount Trend Analysis
-- Revenue Impact by Discount Band
-- Interactive and Business-Friendly Visualizations
+## Key Analysis Questions
+1. Top 10 best-value products by discount percentage
+2. High MRP products that are out of stock
+3. Estimated revenue per category
+4. Products with MRP > ₹500 and discount < 10%
+5. Top 5 categories by average discount
+6. Price per gram for products above 100g
+7. Weight categorization (Low / Medium / Bulk)
+8. Total inventory weight per category
 
-## 📈 Dashboard Insights
+## Dashboard Preview
 
-- Revenue analysis across product categories
-- Stock availability and out-of-stock tracking
-- Product pricing and discount distribution
-- Inventory performance monitoring
-- Revenue leakage identification
-- High-value product analysis
-- Category-wise business performance comparison
+### Page 1 — Overview
+![Dashboard Page 1](images/dashboard_page1.png)
 
-## 🛠️ Technologies Used
+### Page 2 — Revenue & Product Details
+![Dashboard Page 2](images/dashboard_page2.png)
 
-- Power BI
-- SQL
-- DAX
-- Microsoft Excel
-- Data Modeling
-- Data Cleaning
-- Data Visualization
-- Business Intelligence
+## Key Insights
+- **Cooking Essentials** and **Munchies** lead in both total revenue and inventory weight.
+- About **89%** of products are currently in stock, **11%** out of stock.
+- **Chocolates & Candies**, **Ice Cream & Desserts**, and **Packaged Food** offer the highest average discounts (~12-13%).
+- Total of **2,554** unique products analyzed after data cleaning.
 
-## 📂 Project Structure
-
-```
-├── Data/
-├── SQL/
-├── PowerBI/
-├── Dashboard/
-└── README.md
-```
-
-## 📸 Dashboard Preview
-
-Add your Power BI dashboard screenshots here.
-
-## 📌 Business Value
-
-- Improves inventory visibility
-- Identifies revenue opportunities
-- Supports pricing decisions
-- Tracks discount effectiveness
-- Enhances business reporting
-- Enables data-driven decision making
-
-## 👨‍💻 Author
-
-**Ganesh**
-
-- LinkedIn: *(https://www.linkedin.com/in/ramavath-ganesh-758383282/)*
----
-⭐ If you found this project useful, consider giving it a star.
+## Files in this Repo
+- `sql_project.sql` — SQL queries for cleaning and analysis
+- `zepto_v3.csv` — Dataset
+- `Zepto_Dashboard.pbix` — Power BI dashboard file
+- `images/` — Dashboard screenshots
