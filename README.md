@@ -33,12 +33,12 @@ This project explores Zepto's product inventory and sales data to uncover insigh
 ### Page 1 — Overview
 Total product count, stock status breakdown, total weight by category, and average discount by category.
 
-![Dashboard Page 1](images/dashboard_page1.png)
+![Dashboard Page 1](imagee2.png)
 
 ### Page 2 — Revenue & Product Details
 Revenue by category, top discount products, and price-per-gram comparison.
 
-![Dashboard Page 2](images/dashboard_page2.png)
+![Dashboard Page 2](imagee1.png)
 
 ## Key Insights
 - **Cooking Essentials** and **Munchies** lead in both total revenue and total inventory weight.
