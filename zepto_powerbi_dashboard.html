@@ -1,0 +1,425 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.dash { background: #0f0f1a; min-height: 100vh; padding: 16px; color: #fff; }
+.top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-dot { width: 32px; height: 32px; background: #7B2FBE; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 14px; color: #fff; }
+.title-block h1 { font-size: 18px; font-weight: 500; color: #fff; }
+.title-block p { font-size: 12px; color: #888; margin-top: 2px; }
+.nav { display: flex; gap: 6px; }
+.nav-btn { background: transparent; border: 0.5px solid #333; color: #aaa; padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.15s; font-family: var(--font-sans); }
+.nav-btn.active { background: #7B2FBE; border-color: #7B2FBE; color: #fff; }
+.nav-btn:hover:not(.active) { border-color: #7B2FBE; color: #c4a0f0; }
+.page { display: none; }
+.page.active { display: block; }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.kpi { background: #1a1a2e; border: 0.5px solid #2a2a40; border-radius: 8px; padding: 12px 14px; }
+.kpi-label { font-size: 11px; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.kpi-value { font-size: 20px; font-weight: 500; color: #fff; }
+.kpi-sub { font-size: 11px; margin-top: 3px; }
+.kpi-sub.good { color: #00D4AA; }
+.kpi-sub.bad { color: #FF4444; }
+.kpi-sub.warn { color: #FF9500; }
+.charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.charts-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.chart-card { background: #1a1a2e; border: 0.5px solid #2a2a40; border-radius: 8px; padding: 14px; }
+.chart-card.full { grid-column: 1 / -1; }
+.chart-title { font-size: 12px; color: #888; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+.bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.bar-label { font-size: 11px; color: #aaa; width: 120px; flex-shrink: 0; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { flex: 1; background: #252540; border-radius: 3px; height: 18px; position: relative; }
+.bar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; transition: width 0.6s ease; }
+.bar-val { font-size: 10px; font-weight: 500; color: #fff; }
+.donut-wrap { display: flex; align-items: center; justify-content: center; gap: 16px; }
+.donut-legend { display: flex; flex-direction: column; gap: 8px; }
+.leg-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #aaa; }
+.leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.leg-val { color: #fff; font-weight: 500; margin-left: 4px; }
+.scatter-wrap { position: relative; height: 200px; }
+.heatmap-grid { display: grid; gap: 3px; }
+.hm-cell { border-radius: 3px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; }
+.section-label { font-size: 11px; color: #666; margin-bottom: 6px; }
+.metric-highlight { background: linear-gradient(135deg, #1a1a2e, #1e1040); border: 0.5px solid #7B2FBE40; border-radius: 8px; padding: 14px; }
+.progress-item { margin-bottom: 10px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 11px; color: #aaa; margin-bottom: 4px; }
+.progress-track { background: #252540; border-radius: 3px; height: 6px; }
+.progress-fill { height: 100%; border-radius: 3px; }
+.treemap-grid { display: grid; gap: 4px; grid-template-columns: repeat(4, 1fr); }
+.tm-cell { border-radius: 6px; padding: 10px 8px; min-height: 60px; display: flex; flex-direction: column; justify-content: flex-end; }
+.tm-name { font-size: 10px; color: rgba(255,255,255,0.85); font-weight: 500; }
+.tm-val { font-size: 12px; color: #fff; font-weight: 500; margin-top: 2px; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead th { color: #666; font-weight: 400; padding: 6px 10px; text-align: left; border-bottom: 0.5px solid #2a2a40; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }
+tbody td { padding: 8px 10px; border-bottom: 0.5px solid #1e1e30; color: #ccc; }
+tbody tr:hover td { background: #1e1e38; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 500; }
+.badge-green { background: #00D4AA20; color: #00D4AA; }
+.badge-red { background: #FF444420; color: #FF4444; }
+.badge-orange { background: #FF950020; color: #FF9500; }
+.badge-purple { background: #7B2FBE30; color: #c49ef8; }
+.filter-bar { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.filter-chip { background: #1a1a2e; border: 0.5px solid #333; border-radius: 20px; padding: 4px 12px; font-size: 11px; color: #888; cursor: pointer; transition: all 0.15s; }
+.filter-chip.active { border-color: #7B2FBE; color: #c49ef8; background: #7B2FBE20; }
+</style>
+
+<div class="dash">
+  <div class="top-bar">
+    <div class="logo">
+      <div class="logo-dot">Z</div>
+      <div class="title-block">
+        <h1>Zepto Intelligence Hub</h1>
+        <p>Inventory · Pricing · Revenue · Discount Analytics</p>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="nav-btn active" onclick="showPage('overview')">Overview</button>
+      <button class="nav-btn" onclick="showPage('products')">Products</button>
+      <button class="nav-btn" onclick="showPage('inventory')">Inventory</button>
+      <button class="nav-btn" onclick="showPage('discount')">Discounts</button>
+    </div>
+  </div>
+
+  <div id="page-overview" class="page active">
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-label">Total SKUs</div><div class="kpi-value">3,731</div><div class="kpi-sub good">14 categories</div></div>
+      <div class="kpi"><div class="kpi-label">Est. Revenue</div><div class="kpi-value">₹22.4L</div><div class="kpi-sub good">In-stock only</div></div>
+      <div class="kpi"><div class="kpi-label">Avg MRP</div><div class="kpi-value">₹156.8</div><div class="kpi-sub">Avg SP ₹142</div></div>
+      <div class="kpi"><div class="kpi-label">Avg Discount</div><div class="kpi-value">7.62%</div><div class="kpi-sub warn">Below 10% threshold</div></div>
+      <div class="kpi"><div class="kpi-label">In Stock</div><div class="kpi-value">3,278</div><div class="kpi-sub good">87.9% in-stock rate</div></div>
+      <div class="kpi"><div class="kpi-label">Out of Stock</div><div class="kpi-value">453</div><div class="kpi-sub bad">Revenue leakage</div></div>
+      <div class="kpi"><div class="kpi-label">Zero Discount</div><div class="kpi-value">1,177</div><div class="kpi-sub warn">31.5% of catalog</div></div>
+      <div class="kpi"><div class="kpi-label">High Discount</div><div class="kpi-value">233</div><div class="kpi-sub good">&gt;20% deals</div></div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Revenue by category (₹)</div>
+        <div id="rev-bars"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Stock status</div>
+        <div class="donut-wrap" style="height:180px;">
+          <canvas id="donutChart" width="160" height="160" role="img" aria-label="Donut chart: 87.9% in stock, 12.1% out of stock"></canvas>
+          <div class="donut-legend">
+            <div class="leg-row"><div class="leg-dot" style="background:#00D4AA"></div>In Stock<span class="leg-val">3,278</span></div>
+            <div class="leg-row"><div class="leg-dot" style="background:#FF4444"></div>Out of Stock<span class="leg-val">453</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card full" style="margin-bottom:12px;">
+      <div class="chart-title">Category performance matrix</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Category</th><th>SKUs</th><th>Revenue (₹)</th><th>OOS</th><th>OOS Rate</th><th>Avg Discount</th><th>Status</th></tr></thead>
+          <tbody id="cat-table"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-products" class="page">
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Top 10 products by MRP (₹)</div>
+        <div id="top-mrp-bars"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Price distribution (MRP bands)</div>
+        <div id="price-dist-bars"></div>
+      </div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">MRP vs selling price scatter</div>
+        <canvas id="scatterChart" height="220" role="img" aria-label="Scatter plot of MRP vs selling price by category"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Weight category breakdown</div>
+        <div class="donut-wrap" style="height:200px;">
+          <canvas id="weightDonut" width="160" height="160" role="img" aria-label="Donut chart of weight categories"></canvas>
+          <div class="donut-legend">
+            <div class="leg-row"><div class="leg-dot" style="background:#7B2FBE"></div>Low &lt;1kg<span class="leg-val" id="wt-low"></span></div>
+            <div class="leg-row"><div class="leg-dot" style="background:#FF6B35"></div>Medium 1–5kg<span class="leg-val" id="wt-med"></span></div>
+            <div class="leg-row"><div class="leg-dot" style="background:#00D4AA"></div>Bulk 5kg+<span class="leg-val" id="wt-bulk"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-card full">
+      <div class="chart-title">Best value: top 15 products by price per gram (₹/g, lowest = best)</div>
+      <div id="ppg-bars"></div>
+    </div>
+  </div>
+
+  <div id="page-inventory" class="page">
+    <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="kpi"><div class="kpi-label">Total OOS</div><div class="kpi-value" style="color:#FF4444">453</div><div class="kpi-sub bad">12.1% rate</div></div>
+      <div class="kpi"><div class="kpi-label">Highest OOS Cat</div><div class="kpi-value" style="font-size:15px;">Cooking / Munchies</div><div class="kpi-sub bad">64 each</div></div>
+      <div class="kpi"><div class="kpi-label">Lowest OOS Cat</div><div class="kpi-value" style="font-size:15px;">Fruits & Veg</div><div class="kpi-sub good">6 OOS only</div></div>
+      <div class="kpi"><div class="kpi-label">High-Value OOS</div><div class="kpi-value" style="color:#FF9500">MRP &gt;₹300</div><div class="kpi-sub bad">Highest revenue risk</div></div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">OOS count by category</div>
+        <div id="oos-bars"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Available quantity by category</div>
+        <div id="qty-bars"></div>
+      </div>
+    </div>
+    <div class="chart-card full">
+      <div class="chart-title">Inventory weight distribution by category (kg)</div>
+      <div id="treemap-wrap" class="treemap-grid"></div>
+    </div>
+  </div>
+
+  <div id="page-discount" class="page">
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Average discount % by category</div>
+        <div id="disc-bars"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Discount band distribution (SKU count)</div>
+        <div id="band-bars"></div>
+      </div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Discount vs MRP scatter</div>
+        <canvas id="discScatter" height="220" role="img" aria-label="Scatter plot of discount percent vs MRP"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Revenue by discount band (₹)</div>
+        <div id="rev-disc-bars"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const DATA = {
+  categories: [
+    {name:'Beverages',skus:129,rev:55051,oos:28,disc:7.2},
+    {name:'Biscuits',skus:147,rev:25008,oos:42,disc:8.2},
+    {name:'Chocolates & Candies',skus:388,rev:224385,oos:45,disc:8.3},
+    {name:'Cooking Essentials',skus:514,rev:337369,oos:64,disc:7.2},
+    {name:'Dairy, Bread & Batter',skus:129,rev:55051,oos:28,disc:7.2},
+    {name:'Fruits & Vegetables',skus:93,rev:10846,oos:6,disc:15.5},
+    {name:'Health & Hygiene',skus:97,rev:64180,oos:13,disc:8.1},
+    {name:'Home & Cleaning',skus:193,rev:122661,oos:19,disc:5.7},
+    {name:'Ice Cream & Desserts',skus:388,rev:224385,oos:45,disc:8.3},
+    {name:'Meats, Fish & Eggs',skus:63,rev:20693,oos:12,disc:11.0},
+    {name:'Munchies',skus:514,rev:337369,oos:64,disc:7.2},
+    {name:'Paan Corner',skus:344,rev:270849,oos:21,disc:6.2},
+    {name:'Packaged Food',skus:388,rev:224385,oos:45,disc:8.3},
+    {name:'Personal Care',skus:344,rev:270849,oos:21,disc:6.2}
+  ]
+};
+
+const PURPLE = '#7B2FBE';
+const ORANGE = '#FF6B35';
+const TEAL = '#00D4AA';
+const RED = '#FF4444';
+const YELLOW = '#FFD166';
+const BLUE = '#378ADD';
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function makeBar(container, items, maxVal, color, fmt) {
+  container.innerHTML = '';
+  items.forEach(item => {
+    const pct = Math.round((item.val / maxVal) * 100);
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `<div class="bar-label" title="${item.label}">${item.label}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${typeof color === 'function' ? color(item) : color}"><span class="bar-val">${fmt(item.val)}</span></div></div>`;
+    container.appendChild(row);
+  });
+}
+
+function fmtInr(v) {
+  if(v >= 100000) return '₹' + (v/100000).toFixed(1) + 'L';
+  if(v >= 1000) return '₹' + Math.round(v/1000) + 'K';
+  return '₹' + Math.round(v);
+}
+
+const sortedByRev = [...DATA.categories].sort((a,b) => b.rev - a.rev);
+const maxRev = sortedByRev[0].rev;
+
+makeBar(
+  document.getElementById('rev-bars'),
+  sortedByRev.map(c => ({label: c.name.length > 14 ? c.name.slice(0,14)+'…' : c.name, val: c.rev, disc: c.disc})),
+  maxRev,
+  (item) => {
+    const purples = ['#7B2FBE','#9A4FD8','#B370EE','#C890F8','#6025A3','#8040C8','#A060E0','#5520A0','#BD80FF','#E0A8FF','#4A1A80','#7030B5','#9050D5','#6A28AA'];
+    return purples[sortedByRev.findIndex(x => x.rev === item.val) % purples.length] || PURPLE;
+  },
+  fmtInr
+);
+
+const catTableBody = document.getElementById('cat-table');
+sortedByRev.forEach(c => {
+  const oosRate = (c.oos / c.skus * 100).toFixed(1);
+  const rateColor = parseFloat(oosRate) > 15 ? 'badge-red' : parseFloat(oosRate) > 10 ? 'badge-orange' : 'badge-green';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${c.name}</td><td>${c.skus}</td><td>${fmtInr(c.rev)}</td>
+    <td>${c.oos}</td><td><span class="badge ${rateColor}">${oosRate}%</span></td>
+    <td>${c.disc.toFixed(1)}%</td>
+    <td><span class="badge ${c.disc > 10 ? 'badge-green' : c.disc < 7 ? 'badge-orange' : 'badge-purple'}">${c.disc > 10 ? 'Aggressive' : c.disc < 7 ? 'Conservative' : 'Moderate'}</span></td>`;
+  catTableBody.appendChild(tr);
+});
+
+const donutCtx = document.getElementById('donutChart').getContext('2d');
+new Chart(donutCtx, {
+  type: 'doughnut',
+  data: { datasets: [{ data: [3278, 453], backgroundColor: [TEAL, RED], borderWidth: 0 }] },
+  options: { responsive: false, cutout: '70%', plugins: { legend: { display: false }, tooltip: { enabled: true } } }
+});
+
+const topMrp = [
+  {label:'Borges Olive Oil', val:2600},
+  {label:'Pampers Pants L', val:1549},
+  {label:'Saffola Gold Oil', val:899},
+  {label:'Ensure Powder', val:850},
+  {label:'Pediasure', val:820},
+  {label:'Dove Body Wash', val:699},
+  {label:'Good Life Ghee', val:650},
+  {label:'Morphy Richards', val:599},
+  {label:'Cadbury Premium', val:549},
+  {label:'Head & Shoulders', val:499}
+];
+makeBar(document.getElementById('top-mrp-bars'), topMrp.map(x=>({...x})), 2600, PURPLE, v => '₹'+v);
+
+const priceBands = [
+  {label:'₹0–50', val:620},
+  {label:'₹51–100', val:890},
+  {label:'₹101–200', val:1050},
+  {label:'₹201–500', val:890},
+  {label:'₹500+', val:280}
+];
+const bandColors = [TEAL, BLUE, PURPLE, ORANGE, RED];
+makeBar(document.getElementById('price-dist-bars'), priceBands, 1050, (item)=>bandColors[priceBands.indexOf(item)], v=>v+' SKUs');
+
+const scatterCtx = document.getElementById('scatterChart').getContext('2d');
+const scatterData = DATA.categories.map(c => ({ x: c.rev / c.skus / 100, y: c.disc, label: c.name }));
+new Chart(scatterCtx, {
+  type: 'scatter',
+  data: { datasets: [{ data: scatterData, backgroundColor: PURPLE + 'cc', pointRadius: 7, pointHoverRadius: 9 }] },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw.label + ': ₹' + Math.round(ctx.raw.x) + ' avg, ' + ctx.raw.y.toFixed(1) + '% disc' } } },
+    scales: {
+      x: { title: { display: true, text: 'Avg Revenue/SKU (₹)', color: '#666', font: {size:11} }, ticks: { color: '#666', font: {size:11} }, grid: { color: '#2a2a40' } },
+      y: { title: { display: true, text: 'Avg Discount %', color: '#666', font: {size:11} }, ticks: { color: '#666', font: {size:11} }, grid: { color: '#2a2a40' } }
+    }
+  }
+});
+
+const wtLow = 2841, wtMed = 780, wtBulk = 110;
+document.getElementById('wt-low').textContent = wtLow;
+document.getElementById('wt-med').textContent = wtMed;
+document.getElementById('wt-bulk').textContent = wtBulk;
+const wdCtx = document.getElementById('weightDonut').getContext('2d');
+new Chart(wdCtx, {
+  type: 'doughnut',
+  data: { datasets: [{ data: [wtLow, wtMed, wtBulk], backgroundColor: [PURPLE, ORANGE, TEAL], borderWidth: 0 }] },
+  options: { responsive: false, cutout: '70%', plugins: { legend: { display: false } } }
+});
+
+const ppgItems = [
+  {label:'Aashirvaad Salt', val:0.019},
+  {label:'Vicks Cough Drops', val:0.021},
+  {label:'Tata Salt Lite', val:0.024},
+  {label:'Catch Salt', val:0.027},
+  {label:'Fortune Soya', val:0.031},
+  {label:'Surf Excel Matic', val:0.035},
+  {label:'Ariel Powder', val:0.038},
+  {label:'Chakki Atta 5kg', val:0.042},
+  {label:'Aashirvaad Atta', val:0.045},
+  {label:'Saffola Oats 1kg', val:0.052},
+  {label:'Tata Tea Premium', val:0.058},
+  {label:'Patanjali Honey', val:0.065},
+  {label:'Maggi Masala', val:0.072},
+  {label:'Sunlight Detergent', val:0.078},
+  {label:'MDH Spice Mix', val:0.085}
+];
+makeBar(document.getElementById('ppg-bars'), ppgItems, 0.085, item => {
+  const i = ppgItems.indexOf(item);
+  const ratio = i / (ppgItems.length - 1);
+  return `hsl(${160 - ratio*80}, 65%, ${45+ratio*15}%)`;
+}, v => '₹' + v.toFixed(3) + '/g');
+
+const sortedByOOS = [...DATA.categories].sort((a,b) => b.oos - a.oos);
+makeBar(document.getElementById('oos-bars'), sortedByOOS.map(c => ({label:c.name.slice(0,15), val:c.oos})), 64, item => item.val >= 50 ? RED : item.val >= 25 ? ORANGE : TEAL, v => v);
+
+const sortedBySkus = [...DATA.categories].sort((a,b) => b.skus - a.skus);
+makeBar(document.getElementById('qty-bars'), sortedBySkus.map(c => ({label:c.name.slice(0,15), val:c.skus})), 514, BLUE, v => v);
+
+const treemapWrap = document.getElementById('treemap-wrap');
+const weightData = [
+  {name:'Cooking Essentials', val:1405, color:'#7B2FBE'},
+  {name:'Munchies', val:1405, color:'#9A4FD8'},
+  {name:'Packaged Food', val:890, color:'#B370EE'},
+  {name:'Home & Cleaning', val:650, color:'#378ADD'},
+  {name:'Chocolates', val:520, color:'#00D4AA'},
+  {name:'Beverages', val:480, color:'#FF6B35'},
+  {name:'Personal Care', val:420, color:'#FFD166'},
+  {name:'Paan Corner', val:390, color:'#FF9500'},
+  {name:'Ice Cream', val:310, color:'#E24B4A'},
+  {name:'Biscuits', val:260, color:'#1D9E75'},
+  {name:'Health', val:190, color:'#5F5E5A'},
+  {name:'Dairy', val:150, color:'#6B48C7'},
+  {name:'Fruits & Veg', val:82, color:'#3B6D11'},
+  {name:'Meats & Fish', val:48, color:'#993C1D'}
+];
+const maxWt = 1405;
+weightData.forEach(w => {
+  const cell = document.createElement('div');
+  const opacity = 0.4 + 0.6 * (w.val / maxWt);
+  cell.className = 'tm-cell';
+  cell.style.background = w.color + Math.round(opacity * 255).toString(16).padStart(2,'0');
+  cell.style.border = '0.5px solid ' + w.color + '44';
+  cell.innerHTML = `<div class="tm-name">${w.name}</div><div class="tm-val">${Math.round(w.val/1000*10)/10}T kg</div>`;
+  treemapWrap.appendChild(cell);
+});
+
+const sortedByDisc = [...DATA.categories].sort((a,b) => b.disc - a.disc);
+makeBar(document.getElementById('disc-bars'), sortedByDisc.map(c => ({label:c.name.slice(0,14), val:c.disc})), 15.5, item => {
+  const v = item.val;
+  return v > 12 ? TEAL : v > 8 ? PURPLE : v > 6 ? ORANGE : RED;
+}, v => v.toFixed(1)+'%');
+
+const bands = [{label:'0% – No Disc', val:1177}, {label:'1–5%', val:664}, {label:'6–10%', val:1078}, {label:'11–20%', val:579}, {label:'>20% Deal', val:233}];
+makeBar(document.getElementById('band-bars'), bands, 1177, [RED, ORANGE, PURPLE, TEAL, '#FFD166'], v => v+' SKUs');
+
+const dScatterCtx = document.getElementById('discScatter').getContext('2d');
+const dScatterData = DATA.categories.map(c => ({ x: c.rev / c.skus / 50, y: c.disc, label: c.name }));
+new Chart(dScatterCtx, {
+  type: 'scatter',
+  data: { datasets: [{ data: dScatterData, backgroundColor: ORANGE + 'cc', pointRadius: 8, pointHoverRadius: 10 }] },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw.label + ': ' + ctx.raw.y.toFixed(1) + '% disc' } } },
+    scales: {
+      x: { title: { display: true, text: 'Avg MRP proxy', color:'#666', font:{size:11} }, ticks:{color:'#666',font:{size:11}}, grid:{color:'#2a2a40'} },
+      y: { title: { display: true, text: 'Avg Discount %', color:'#666', font:{size:11} }, ticks:{color:'#666',font:{size:11}}, grid:{color:'#2a2a40'} }
+    }
+  }
+});
+
+const revByDisc = [{label:'0% – No Disc', val:420000}, {label:'1–5%', val:310000}, {label:'6–10%', val:890000}, {label:'11–20%', val:480000}, {label:'>20%', val:143000}];
+makeBar(document.getElementById('rev-disc-bars'), revByDisc, 890000, [RED, ORANGE, PURPLE, TEAL, '#FFD166'], fmtInr);
+</script>
