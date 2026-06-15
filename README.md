@@ -31,16 +31,22 @@ This project explores Zepto's product inventory and sales data to uncover insigh
 ## Dashboard Preview
 
 ### Page 1 — Overview
+Total product count, stock status breakdown, total weight by category, and average discount by category.
+
 ![Dashboard Page 1](images/dashboard_page1.png)
 
 ### Page 2 — Revenue & Product Details
+Revenue by category, top discount products, and price-per-gram comparison.
+
 ![Dashboard Page 2](images/dashboard_page2.png)
 
 ## Key Insights
-- **Cooking Essentials** and **Munchies** lead in both total revenue and inventory weight.
+- **Cooking Essentials** and **Munchies** lead in both total revenue and total inventory weight.
 - About **89%** of products are currently in stock, **11%** out of stock.
-- **Chocolates & Candies**, **Ice Cream & Desserts**, and **Packaged Food** offer the highest average discounts (~12-13%).
-- Total of **2,554** unique products analyzed after data cleaning.
+- **Chocolates & Candies**, **Ice Cream & Desserts**, and **Packaged Food** offer the highest average discounts (~10-13%).
+- A total of **2,554** unique products were analyzed after data cleaning.
+- Products like **Whisper Ultra Clean Wings XL+ Pouch** and **Whiskas Adult (+1 Year) Dry Cat Food, Ocean Fish Flavour** have high MRPs (₹1,000+) among top-discount items.
+- Best price-per-gram value products include **Pillsbury Chakki Fresh Atta** (₹7.50) and **Aashirvaad Atta** (₹7.98) for large 5-10kg packs.
 
 ## Files in this Repo
 - `sql_project.sql` — SQL queries for cleaning and analysis
